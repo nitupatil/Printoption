@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Download Test Methods</title>
+
+  <!-- FileSaver.js (Method 2) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    button {
+      display: block;
+      margin-bottom: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Download Test Options</h2>
+
+  <button onclick="downloadUsingAnchor()">1. Download using &lt;a download&gt;</button>
+  <button onclick="downloadUsingFileSaver()">2. Download using FileSaver.js</button>
+  <button onclick="downloadUsingBlobClick()">3. Download using Blob & JS click</button>
+  <button onclick="openInNewTab()">4. Open data in new tab (manual save)</button>
+
+  <script>
+    const fileName = "example.txt";
+    const content = "This is a test download from your web app.";
+
+    // Method 1: <a download>
+    function downloadUsingAnchor() {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Method 2: FileSaver.js
+    function downloadUsingFileSaver() {
+      const blob = new Blob([content], { type: 'text/plain' });
+      saveAs(blob, fileName);
+    }
+
+    // Method 3: Manual Blob + simulated click
+    function downloadUsingBlobClick() {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Method 4: Open in new tab
+    function openInNewTab() {
+      const win = window.open();
+      win.document.write('<pre>' + content + '</pre>');
+      win.document.close();
+    }
+  </script>
+</body>
+</html>
